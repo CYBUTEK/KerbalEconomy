@@ -1,7 +1,86 @@
-﻿namespace KerbalEconomy
+﻿using System.IO;
+using System.Reflection;
+using KerbalEconomy.Ledger;
+
+namespace KerbalEconomy
 {
     public class KerbalEconomy
     {
+        #region Static Properties
+
+        /// <summary>
+        /// Current version of the Kerbal Economy assembly.
+        /// </summary>
+        public const string AssemblyVersion = "1.0.0.0";
+
+        private static string assemblyFile;
+        /// <summary>
+        /// Gets the file name including path of the Kerbal Economy assembly.
+        /// </summary>
+        public static string AssemblyFile
+        {
+            get
+            {
+                if (assemblyFile == null)
+                    assemblyFile = Assembly.GetExecutingAssembly().Location;
+
+                return assemblyFile;
+            }
+        }
+
+
+        private static string assemblyName;
+        /// <summary>
+        /// Gets the file name of the Kerbal Economy assembly.
+        /// </summary>
+        public static string AssemblyName
+        {
+            get
+            {
+                if (assemblyName == null)
+                    assemblyName = new FileInfo(AssemblyFile).Name;
+
+                return assemblyName;
+            }
+        }
+
+        private static string assemblyPath;
+        /// <summary>
+        /// Gets the path of the Kerbal Economy assembly.
+        /// </summary>
+        public static string AssemblyPath
+        {
+            get
+            {
+                if (assemblyPath == null)
+                    assemblyPath = AssemblyFile.Replace(AssemblyName, string.Empty);
+
+                return assemblyPath;
+            }
+        }
+
+        #endregion
+
+        #region Static Methods
+
+        /// <summary>
+        /// Converts a monitary value into science.
+        /// </summary>
+        public static double ToScience(double monies)
+        {
+            return monies / Instance.costRatio;
+        }
+
+        /// <summary>
+        /// Converts a science value into monies.
+        /// </summary>
+        public static double ToMonies(double science)
+        {
+            return science * Instance.costRatio;
+        }
+
+        #endregion
+
         #region Instance
 
         private static KerbalEconomy instance;
@@ -22,6 +101,16 @@
         #endregion
 
         #region Properties
+
+        private Book ledger;
+        /// <summary>
+        /// Gets and sets the ledger book.
+        /// </summary>
+        public Book Ledger
+        {
+            get { return this.ledger; }
+            set { this.ledger = value; }
+        }
 
         private double costRatio = 1000d;
         /// <summary>
@@ -60,37 +149,19 @@
         /// <summary>
         /// Credit your economy's science. (Put in)
         /// </summary>
-        public void Credit(double science)
+        public void Credit(string transaction, double science)
         {
             this.science += science;
+            this.ledger.AddRow(HighLogic.CurrentGame.UniversalTime, transaction, 0d, science, this.science);
         }
 
         /// <summary>
         /// Debit your economy's science. (Take out)
         /// </summary>
-        public void Debit(double science)
+        public void Debit(string transaction, double science)
         {
             this.science -= science;
-        }
-
-        #endregion
-
-        #region Static Methods
-
-        /// <summary>
-        /// Converts a monitary value into science.
-        /// </summary>
-        public static double ToScience(double monies)
-        {
-            return monies / Instance.costRatio;
-        }
-
-        /// <summary>
-        /// Converts a science value into monies.
-        /// </summary>
-        public static double ToMonies(double science)
-        {
-            return science * Instance.costRatio;
+            this.ledger.AddRow(HighLogic.CurrentGame.UniversalTime, transaction, science, 0d, this.science);
         }
 
         #endregion

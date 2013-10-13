@@ -93,7 +93,12 @@ namespace KerbalEconomy
         private void OnDestroy()
         {
             if (HighLogic.LoadedSceneIsFlight)
-                KerbalEconomy.Instance.Debit(KerbalEconomy.ToScience(cost));
+            {
+                if (EditorLogic.fetch.editorType == EditorLogic.EditorMode.VAB)
+                    KerbalEconomy.Instance.Debit("Ship Construction", KerbalEconomy.ToScience(cost));
+                else if (EditorLogic.fetch.editorType == EditorLogic.EditorMode.SPH)
+                    KerbalEconomy.Instance.Debit("Plane Construction", KerbalEconomy.ToScience(cost));
+            }
         }
     }
 }
