@@ -37,7 +37,7 @@
     <Compile Include="Extensions\PartListExtensions.cs" />
     <Compile Include="KerbalEconomy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="VABDisplay.cs" />
+    <Compile Include="EditorDisplay.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">

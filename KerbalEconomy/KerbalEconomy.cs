@@ -47,7 +47,7 @@
         /// <summary>
         /// Gets and sets the budget calculated from the stored science.
         /// </summary>
-        public double Budget
+        public double Monies
         {
             get { return this.science * this.costRatio; }
             set { this.science = value / this.costRatio; }
@@ -55,9 +55,43 @@
 
         #endregion
 
-        #region Methods
+        #region Public Methods
 
+        /// <summary>
+        /// Credit your economy's science. (Put in)
+        /// </summary>
+        public void Credit(double science)
+        {
+            this.science += science;
+        }
 
+        /// <summary>
+        /// Debit your economy's science. (Take out)
+        /// </summary>
+        public void Debit(double science)
+        {
+            this.science -= science;
+        }
+
+        #endregion
+
+        #region Static Methods
+
+        /// <summary>
+        /// Converts a monitary value into science.
+        /// </summary>
+        public static double ToScience(double monies)
+        {
+            return monies / Instance.costRatio;
+        }
+
+        /// <summary>
+        /// Converts a science value into monies.
+        /// </summary>
+        public static double ToMonies(double science)
+        {
+            return science * Instance.costRatio;
+        }
 
         #endregion
     }
