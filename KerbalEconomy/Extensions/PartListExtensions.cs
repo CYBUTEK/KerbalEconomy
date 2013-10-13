@@ -5,6 +5,9 @@ namespace KerbalEconomy.Extensions
 {
     public static class PartListExtensions
     {
+        /// <summary>
+        /// Gets the total cost of all the parts.
+        /// </summary>
         public static int Cost(this List<Part> value)
         {
             int cost = 0;
