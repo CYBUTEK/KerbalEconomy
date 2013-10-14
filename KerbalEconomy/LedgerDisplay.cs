@@ -1,9 +1,11 @@
-﻿using KerbalEconomy.Ledger;
+﻿using KerbalEconomy.Extensions;
+using KerbalEconomy.Helpers;
+using KerbalEconomy.Ledger;
 using UnityEngine;
 
 namespace KerbalEconomy
 {
-    [KSPAddon(KSPAddon.Startup.SpaceCentre, false)]
+    [KSPAddon(KSPAddon.Startup.Instantly, true)]
     public class LedgerDisplay : MonoBehaviour
     {
         #region Constants
@@ -13,26 +15,51 @@ namespace KerbalEconomy
 
         #endregion
 
+        #region Instance
+
+        private static LedgerDisplay instance;
+        /// <summary>
+        /// Gets the current instance of the LedgerDisplay object.
+        /// </summary>
+        public static LedgerDisplay Instance
+        {
+            get { return instance; }
+        }
+
+        #endregion
+
         #region Fields
 
-        private Rect buttonPosition = new Rect(Screen.width - 250f, 0f, 250f, 30f);
         private Rect windowPosition = new Rect(Screen.width / 2f - WINDOW_WIDTH / 2f, Screen.height / 2f - WINDOW_HEIGHT / 2f, WINDOW_WIDTH, WINDOW_HEIGHT);
         private int windowID = Random.Range(100, int.MaxValue);
 
         private GUIStyle windowStyle, buttonStyle, scrollStyle, labelTitleStyle, labelNormalStyle;
         private bool hasInitStyles = false;
 
-        private bool showDisplay = false;
         private Vector2 scrollPosition = Vector2.zero;
+
+        #endregion
+
+        #region Properties
+
+        private bool visible = false;
+        /// <summary>
+        /// Gets and sets whether the display is visible.
+        /// </summary>
+        public bool Visible
+        {
+            get { return this.visible; }
+            set { this.visible = value; }
+        }
 
         #endregion
 
         #region Initialisation
 
-        // Runs when the object is created.
         private void Start()
         {
-            RenderingManager.AddToPostDrawQueue(0, this.Draw);
+            instance = this;
+            DontDestroyOnLoad(this);
         }
 
         // Initialises the styles upon request.
@@ -61,15 +88,13 @@ namespace KerbalEconomy
 
         #region Drawing
 
-        // Runs when KSP calls the draw queue.
-        private void Draw()
+        // Runs when the display is called to draw its self.
+        public void Draw()
         {
             if (!this.hasInitStyles) this.InitialiseStyles();
 
-            this.showDisplay = GUI.Toggle(this.buttonPosition, this.showDisplay, "Kerbal Economy - Show Ledger", this.buttonStyle);
-
-            if (this.showDisplay)
-                this.windowPosition = GUILayout.Window(this.windowID, this.windowPosition, this.Window, "Kerbal Economy Ledger", this.windowStyle);
+            if (this.visible && KerbalEconomy.Instance.Ledger != null)
+                this.windowPosition = GUILayout.Window(this.windowID, this.windowPosition, this.Window, "Kerbal Economy Ledger", this.windowStyle).ClampInsideScreen();
         }
 
         // Runs when the display is being shown.
@@ -98,7 +123,7 @@ namespace KerbalEconomy
 
             GUILayout.Label("TIME", this.labelTitleStyle);
             foreach (Row row in KerbalEconomy.Instance.Ledger.Rows)
-                GUILayout.Label(row.UniversalTime.ToString("0."), this.labelNormalStyle);
+                GUILayout.Label(TimeHelper.FromUniversalTime(row.UniversalTime), this.labelNormalStyle);
 
             GUILayout.EndVertical();
         }
@@ -120,7 +145,12 @@ namespace KerbalEconomy
 
             GUILayout.Label("PAID OUT", this.labelTitleStyle);
             foreach (Row row in KerbalEconomy.Instance.Ledger.Rows)
-                GUILayout.Label(KerbalEconomy.ToMonies(row.Debit).ToString("#,0."), this.labelNormalStyle);
+            {
+                if (row.Debit != 0d)
+                    GUILayout.Label(KerbalEconomy.ToMonies(row.Debit).ToString("#,0."), this.labelNormalStyle);
+                else
+                    GUILayout.Label(string.Empty, this.labelNormalStyle);
+            }
 
             GUILayout.EndVertical();
         }
@@ -131,7 +161,12 @@ namespace KerbalEconomy
 
             GUILayout.Label("PAID IN", this.labelTitleStyle);
             foreach (Row row in KerbalEconomy.Instance.Ledger.Rows)
-                GUILayout.Label(KerbalEconomy.ToMonies(row.Credit).ToString("#,0."), this.labelNormalStyle);
+            {
+                if (row.Credit != 0d)
+                    GUILayout.Label(KerbalEconomy.ToMonies(row.Credit).ToString("#,0."), this.labelNormalStyle);
+                else
+                    GUILayout.Label(string.Empty, this.labelNormalStyle);
+            }
 
             GUILayout.EndVertical();
         }
@@ -142,8 +177,13 @@ namespace KerbalEconomy
 
             GUILayout.Label("BALANCE", this.labelTitleStyle);
             foreach (Row row in KerbalEconomy.Instance.Ledger.Rows)
-                GUILayout.Label(KerbalEconomy.ToMonies(row.Balance).ToString("#,0."), this.labelNormalStyle);
-            
+            {
+                if (row.Balance != 0d)
+                    GUILayout.Label(KerbalEconomy.ToMonies(row.Balance).ToString("#,0."), this.labelNormalStyle);
+                else
+                    GUILayout.Label(string.Empty, this.labelNormalStyle);
+            }
+        
             GUILayout.EndVertical();
         }
 

@@ -35,6 +35,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Extensions\PartListExtensions.cs" />
+    <Compile Include="Extensions\RectExtensions.cs" />
+    <Compile Include="Helpers\TimeHelper.cs" />
     <Compile Include="KerbalEconomy.cs" />
     <Compile Include="LedgerDisplay.cs" />
     <Compile Include="LedgerLoader.cs" />
