@@ -4,6 +4,25 @@ namespace KerbalEconomy.Ledger
 {
     public class Row
     {
+        #region Static Methods
+
+        /// <summary>
+        /// Gets a Row from a tabbed delimited string.
+        /// </summary>
+        public static Row FromTabbedString(string tabbedString)
+        {
+            string[] row = tabbedString.Split('\t');
+            return new Row() {
+                UniversalTime = double.Parse(row[0]),
+                Transaction = row[1],
+                Debit = double.Parse(row[2]),
+                Credit = double.Parse(row[3]),
+                Balance = double.Parse(row[4])
+            };
+        }
+
+        #endregion
+
         #region Properties
 
         private double universalTime = 0d;
@@ -54,6 +73,18 @@ namespace KerbalEconomy.Ledger
         {
             get { return this.balance; }
             set { this.balance = value; }
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Get a string suitable to be saved in a tab separated file.
+        /// </summary>
+        public string GetTabbedString()
+        {
+            return this.universalTime.ToString() + "\t" + this.transaction + "\t" + this.debit + "\t" + this.credit + "\t" + this.balance;
         }
 
         #endregion

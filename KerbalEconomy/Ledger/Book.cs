@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace KerbalEconomy.Ledger
 {
@@ -52,13 +53,25 @@ namespace KerbalEconomy.Ledger
             });
         }
 
-        private void Save()
+        public void Save()
         {
+            List<string> rows = new List<string>();
+            foreach (Row row in this.rows)
+                rows.Add(row.GetTabbedString());
 
+            File.WriteAllLines(KerbalEconomy.AssemblyPath + filename, rows.ToArray());
         }
 
-        private void Load()
+        public void Load()
         {
+            if (File.Exists(KerbalEconomy.AssemblyPath + filename))
+            {
+                string[] rows = File.ReadAllLines(KerbalEconomy.AssemblyPath + filename);
+
+                this.rows = new List<Row>();
+                foreach (string row in rows)
+                    this.rows.Add(Row.FromTabbedString(row));
+            }
         }
 
         #endregion

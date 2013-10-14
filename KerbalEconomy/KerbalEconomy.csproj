@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="Extensions\PartListExtensions.cs" />
     <Compile Include="KerbalEconomy.cs" />
+    <Compile Include="LedgerLoader.cs" />
     <Compile Include="Ledger\Book.cs" />
     <Compile Include="Ledger\Row.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
