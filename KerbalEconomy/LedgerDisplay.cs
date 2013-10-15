@@ -37,7 +37,8 @@ namespace KerbalEconomy
         private Rect windowPosition = new Rect(Screen.width / 2f - WINDOW_WIDTH / 2f, Screen.height / 2f - WINDOW_HEIGHT / 2f, WINDOW_WIDTH, WINDOW_HEIGHT);
         private int windowID = WindowHelper.GetWindowID();
 
-        private GUIStyle windowStyle, buttonStyle, scrollStyle, labelTitleStyle, labelNormalStyle;
+        private GUIStyle windowStyle, boxStyle, scrollStyle, buttonStyle, labelTitleLeftStyle, labelTitleRightStyle, labelNormalLeftStyle, labelNormalRightStyle;
+        private GUILayoutOption[] boxLayoutOptions, buttonLayoutOptions;
         private bool hasInitStyles = false;
 
         private Vector2 scrollPosition = Vector2.zero;
@@ -58,19 +59,47 @@ namespace KerbalEconomy
 
             this.windowStyle = new GUIStyle(HighLogic.Skin.window);
 
+            this.boxStyle = new GUIStyle(HighLogic.Skin.box);
+            this.boxStyle.margin = new RectOffset(5, 5, 5, 5);
+            this.boxStyle.padding = new RectOffset(10, 10, 5, 5);
+
             this.buttonStyle = new GUIStyle(HighLogic.Skin.button);
+            this.buttonStyle.margin = new RectOffset(5, 5, 5, 5);
             this.buttonStyle.normal.textColor = Color.white;
+            this.buttonStyle.stretchHeight = true;
 
             this.scrollStyle = new GUIStyle(HighLogic.Skin.scrollView);
+            this.scrollStyle.margin = new RectOffset();
+            this.scrollStyle.padding = new RectOffset(10, 10, 5, 5);
 
-            this.labelTitleStyle = new GUIStyle(HighLogic.Skin.label);
-            this.labelTitleStyle.normal.textColor = Color.white;
-            this.labelTitleStyle.fontStyle = FontStyle.Bold;
-            this.labelTitleStyle.stretchWidth = true;
+            this.labelTitleLeftStyle = new GUIStyle(HighLogic.Skin.label);
+            this.labelTitleLeftStyle.normal.textColor = Color.white;
+            this.labelTitleLeftStyle.alignment = TextAnchor.MiddleLeft;
+            this.labelTitleLeftStyle.fontStyle = FontStyle.Bold;
+            this.labelTitleLeftStyle.stretchWidth = true;
 
-            this.labelNormalStyle = new GUIStyle(HighLogic.Skin.label);
-            this.labelNormalStyle.fontStyle = FontStyle.Bold;
-            this.labelNormalStyle.stretchWidth = true;
+            this.labelTitleRightStyle = new GUIStyle(this.labelTitleLeftStyle);
+            this.labelTitleRightStyle.alignment = TextAnchor.MiddleRight;
+
+            this.labelNormalLeftStyle = new GUIStyle(HighLogic.Skin.label);
+            this.labelNormalLeftStyle.alignment = TextAnchor.MiddleLeft;
+            this.labelNormalLeftStyle.fontStyle = FontStyle.Bold;
+            this.labelNormalLeftStyle.stretchWidth = true;
+
+            this.labelNormalRightStyle = new GUIStyle(this.labelNormalLeftStyle);
+            this.labelNormalRightStyle.alignment = TextAnchor.MiddleRight;
+
+            this.boxLayoutOptions = new GUILayoutOption[]
+            {
+                GUILayout.Width(175f),
+                GUILayout.Height(30f)
+            };
+
+            this.buttonLayoutOptions = new GUILayoutOption[]
+            {
+                GUILayout.Width(100f),
+                GUILayout.Height(30f)
+            };
         }
 
         #endregion
@@ -102,15 +131,44 @@ namespace KerbalEconomy
 
             GUILayout.EndHorizontal();
             GUILayout.EndScrollView();
+
+            GUILayout.BeginHorizontal();
+
+            GUILayout.BeginHorizontal(this.boxStyle, this.boxLayoutOptions);
+            GUILayout.Label("Science", this.labelTitleLeftStyle);
+            GUILayout.Label(KerbalEconomy.Instance.Science.ToString("#,0.00"), this.labelNormalRightStyle);
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(this.boxStyle, this.boxLayoutOptions);
+            GUILayout.Label("Cost Ratio", this.labelTitleLeftStyle);
+            GUILayout.Label(KerbalEconomy.Instance.CostRatio.ToString("#,0"), this.labelNormalRightStyle);
+            GUILayout.EndHorizontal();
+
+            GUILayout.FlexibleSpace();
+
+            bool isEasy = KerbalEconomy.Instance.CostRatio == KerbalEconomy.EASY;
+            bool isNormal = KerbalEconomy.Instance.CostRatio == KerbalEconomy.NORMAL;
+            bool isHard = KerbalEconomy.Instance.CostRatio == KerbalEconomy.HARD;
+
+            if (GUILayout.Toggle(isEasy, "EASY", this.buttonStyle, this.buttonLayoutOptions) && !isEasy)
+                KerbalEconomy.Instance.CostRatio = KerbalEconomy.EASY;
+
+            if (GUILayout.Toggle(isNormal, "NORMAL", this.buttonStyle, this.buttonLayoutOptions) && !isNormal)
+                KerbalEconomy.Instance.CostRatio = KerbalEconomy.NORMAL;
+
+            if (GUILayout.Toggle(isHard, "HARD", this.buttonStyle, this.buttonLayoutOptions) && !isHard)
+                KerbalEconomy.Instance.CostRatio = KerbalEconomy.HARD;
+
+            GUILayout.EndHorizontal();
         }
 
         private void DrawTime()
         {
             GUILayout.BeginVertical();
 
-            GUILayout.Label("TIME", this.labelTitleStyle);
+            GUILayout.Label("TIME", this.labelTitleLeftStyle);
             foreach (Row row in KerbalEconomy.Instance.Ledger.Rows)
-                GUILayout.Label(TimeHelper.FromUniversalTime(row.UniversalTime), this.labelNormalStyle);
+                GUILayout.Label(TimeHelper.FromUniversalTime(row.UniversalTime), this.labelNormalLeftStyle);
 
             GUILayout.EndVertical();
         }
@@ -119,9 +177,9 @@ namespace KerbalEconomy
         {
             GUILayout.BeginVertical();
 
-            GUILayout.Label("TRANSACTION", this.labelTitleStyle);
+            GUILayout.Label("TRANSACTION", this.labelTitleLeftStyle);
             foreach (Row row in KerbalEconomy.Instance.Ledger.Rows)
-                GUILayout.Label(row.Transaction, this.labelNormalStyle);
+                GUILayout.Label(row.Transaction, this.labelNormalLeftStyle);
 
             GUILayout.EndVertical();
         }
@@ -130,13 +188,13 @@ namespace KerbalEconomy
         {
             GUILayout.BeginVertical();
 
-            GUILayout.Label("PAID OUT", this.labelTitleStyle);
+            GUILayout.Label("PAID OUT", this.labelTitleRightStyle);
             foreach (Row row in KerbalEconomy.Instance.Ledger.Rows)
             {
                 if (row.Debit != 0d)
-                    GUILayout.Label(KerbalEconomy.ToMonies(row.Debit).ToString("#,0."), this.labelNormalStyle);
+                    GUILayout.Label(KerbalEconomy.ToMonies(row.Debit).ToString("#,0."), this.labelNormalRightStyle);
                 else
-                    GUILayout.Label(string.Empty, this.labelNormalStyle);
+                    GUILayout.Label(string.Empty, this.labelNormalRightStyle);
             }
 
             GUILayout.EndVertical();
@@ -146,13 +204,13 @@ namespace KerbalEconomy
         {
             GUILayout.BeginVertical();
 
-            GUILayout.Label("PAID IN", this.labelTitleStyle);
+            GUILayout.Label("PAID IN", this.labelTitleRightStyle);
             foreach (Row row in KerbalEconomy.Instance.Ledger.Rows)
             {
                 if (row.Credit != 0d)
-                    GUILayout.Label(KerbalEconomy.ToMonies(row.Credit).ToString("#,0."), this.labelNormalStyle);
+                    GUILayout.Label(KerbalEconomy.ToMonies(row.Credit).ToString("#,0."), this.labelNormalRightStyle);
                 else
-                    GUILayout.Label(string.Empty, this.labelNormalStyle);
+                    GUILayout.Label(string.Empty, this.labelNormalRightStyle);
             }
 
             GUILayout.EndVertical();
@@ -162,13 +220,13 @@ namespace KerbalEconomy
         {
             GUILayout.BeginVertical();
 
-            GUILayout.Label("BALANCE", this.labelTitleStyle);
+            GUILayout.Label("BALANCE", this.labelTitleRightStyle);
             foreach (Row row in KerbalEconomy.Instance.Ledger.Rows)
             {
                 if (row.Balance != 0d)
-                    GUILayout.Label(KerbalEconomy.ToMonies(row.Balance).ToString("#,0."), this.labelNormalStyle);
+                    GUILayout.Label(KerbalEconomy.ToMonies(row.Balance).ToString("#,0."), this.labelNormalRightStyle);
                 else
-                    GUILayout.Label(string.Empty, this.labelNormalStyle);
+                    GUILayout.Label(string.Empty, this.labelNormalRightStyle);
             }
         
             GUILayout.EndVertical();

@@ -6,6 +6,14 @@ namespace KerbalEconomy
 {
     public class KerbalEconomy
     {
+        #region Constants
+
+        public const double EASY = 2000d;
+        public const double NORMAL = 1000d;
+        public const double HARD = 500d;
+
+        #endregion
+
         #region Static Properties
 
         /// <summary>
