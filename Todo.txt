@@ -3,9 +3,9 @@ DONE	-	Create directory if needed.
 DONE	-	Change file extension from '.txt' to '.csv'.
 
 * Create basic settings manager.
-	-	'Key = Value'
-	-	Saving
-	-	Loading
+DONE	-	'Key = Value'
+DONE	-	Saving
+DONE	-	Loading
 
 * Save and load difficulty setting.
 	-	Saving
