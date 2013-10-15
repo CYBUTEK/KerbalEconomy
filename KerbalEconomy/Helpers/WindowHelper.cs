@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿// PROJECT: Kerbal Economy
+// AUTHOR:  CYBUTEK
+// LICENSE: Attribution-NonCommercial-ShareAlike 3.0 Unported
+
+using UnityEngine;
 
 namespace KerbalEconomy.Helpers
 {

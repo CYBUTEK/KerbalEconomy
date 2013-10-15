@@ -1,4 +1,8 @@
-﻿namespace KerbalEconomy.Helpers
+﻿// PROJECT: Kerbal Economy
+// AUTHOR:  CYBUTEK
+// LICENSE: Attribution-NonCommercial-ShareAlike 3.0 Unported
+
+namespace KerbalEconomy.Helpers
 {
     public class TimeHelper
     {

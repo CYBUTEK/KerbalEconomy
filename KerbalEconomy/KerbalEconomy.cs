@@ -1,4 +1,8 @@
-﻿using System.IO;
+﻿// PROJECT: Kerbal Economy
+// AUTHOR:  CYBUTEK
+// LICENSE: Attribution-NonCommercial-ShareAlike 3.0 Unported
+
+using System.IO;
 using System.Reflection;
 using KerbalEconomy.Ledger;
 
@@ -8,6 +12,11 @@ namespace KerbalEconomy
     {
         #region Constants
 
+        /// <summary>
+        /// Current version of the Kerbal Economy assembly.
+        /// </summary>
+        public const string AssemblyVersion = "1.0";
+
         public const double EASY = 2000d;
         public const double NORMAL = 1000d;
         public const double HARD = 500d;
@@ -15,11 +24,6 @@ namespace KerbalEconomy
         #endregion
 
         #region Static Properties
-
-        /// <summary>
-        /// Current version of the Kerbal Economy assembly.
-        /// </summary>
-        public const string AssemblyVersion = "1.0.0.0";
 
         private static string assemblyFile;
         /// <summary>

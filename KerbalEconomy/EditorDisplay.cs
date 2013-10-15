@@ -1,4 +1,8 @@
-﻿using KerbalEconomy.Extensions;
+﻿// PROJECT: Kerbal Economy
+// AUTHOR:  CYBUTEK
+// LICENSE: Attribution-NonCommercial-ShareAlike 3.0 Unported
+
+using KerbalEconomy.Extensions;
 using KerbalEconomy.Helpers;
 using UnityEngine;
 

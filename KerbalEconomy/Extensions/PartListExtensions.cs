@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿// PROJECT: Kerbal Economy
+// AUTHOR:  CYBUTEK
+// LICENSE: Attribution-NonCommercial-ShareAlike 3.0 Unported
+
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace KerbalEconomy.Extensions

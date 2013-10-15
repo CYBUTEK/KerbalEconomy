@@ -1,20 +1,26 @@
-﻿* Save and load ledgers from a 'Ledgers' directory.
+﻿DONE * Save and load ledgers from a 'Ledgers' directory.
 DONE	-	Create directory if needed.
 DONE	-	Change file extension from '.txt' to '.csv'.
 
-* Create basic settings manager.
+DONE * Create basic settings manager.
 DONE	-	'Key = Value'
 DONE	-	Saving
 DONE	-	Loading
 
-* Save and load difficulty setting.
+DONE * Save and load difficulty setting.
 DONE	-	Saving
 DONE	-	Loading
 
-* Add science gained in a mission to the ledger.
+DONE * Add science gained in a mission to the ledger.
 DONE	-	Difference between start and end of the Flight scene.
 DONE	-	Add transaction to the ledger crediting science.
 
-* Add science used in R&D to the ledger.
+DONE * Add science used in R&D to the ledger.
 DONE	-	Difference between start and end of the R&D scene.
 DONE	-	Add transaction to the ledger debiting science.
+
+* Readme file.
+
+* Additional functionality.
+	-	Ledger size is adjustable in settings.
+	-	Science (pre-0.22) adjustable in settings.

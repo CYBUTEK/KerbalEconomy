@@ -1,4 +1,8 @@
-﻿using KerbalEconomy.Helpers;
+﻿// PROJECT: Kerbal Economy
+// AUTHOR:  CYBUTEK
+// LICENSE: Attribution-NonCommercial-ShareAlike 3.0 Unported
+
+using KerbalEconomy.Helpers;
 using KerbalEconomy.Ledger;
 using UnityEngine;
 
@@ -108,7 +112,7 @@ namespace KerbalEconomy
             if (!this.hasInitStyles) this.InitialiseStyles();
 
             if (KerbalEconomy.Instance.Ledger != null)
-                this.windowPosition = GUILayout.Window(this.windowID, this.windowPosition, this.Window, "Kerbal Economy Ledger", this.windowStyle);
+                this.windowPosition = GUILayout.Window(this.windowID, this.windowPosition, this.Window, "Kerbal Economy Ledger " + KerbalEconomy.AssemblyVersion, this.windowStyle);
         }
 
         // Runs when the display is being shown.
