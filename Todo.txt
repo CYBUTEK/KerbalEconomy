@@ -23,4 +23,4 @@ DONE	-	Add transaction to the ledger debiting science.
 
 * Additional functionality.
 DONE	-	Ledger size is adjustable in settings.
-	-	Science (pre-0.22) adjustable in settings.
+DONE	-	Science (pre-0.22) adjustable in settings.

@@ -138,15 +138,19 @@ namespace KerbalEconomy
             }
         }
 
-        // This should be replaced with getting and setting actual science values from within KSP.
-        private double science = 5d;
+        // TODO: This should be replaced with getting and setting actual science values from within KSP.
+        private double science = 100d;
         /// <summary>
         /// Gets and sets the amount of stored science.
         /// </summary>
         public double Science
         {
             get { return this.science; }
-            set { this.science = value; }
+            set
+            {
+                this.science = value;
+                Settings.Instance.Set("Science", this.science.ToString());
+            }
         }
 
         /// <summary>
@@ -162,9 +166,13 @@ namespace KerbalEconomy
 
         #region Initialisation
 
+        // Constructor used to load settings.
         private KerbalEconomy()
         {
-            this.CostRatio = double.Parse(Settings.Instance.Get("Cost Ratio", this.costRatio.ToString()));
+            this.costRatio = double.Parse(Settings.Instance.Get("Cost Ratio", this.costRatio.ToString()));
+
+            // TODO: Only in pre-0.22 for testing.
+            this.science = double.Parse(Settings.Instance.Get("Science", this.science.ToString()));
         }
 
         #endregion
