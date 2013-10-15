@@ -37,7 +37,7 @@ namespace KerbalEconomy
         private Rect windowPosition = new Rect(Screen.width / 2f - WINDOW_WIDTH / 2f, Screen.height / 2f - WINDOW_HEIGHT / 2f, WINDOW_WIDTH, WINDOW_HEIGHT);
         private int windowID = WindowHelper.GetWindowID();
 
-        private GUIStyle windowStyle, boxStyle, scrollStyle, buttonStyle, labelTitleLeftStyle, labelTitleRightStyle, labelNormalLeftStyle, labelNormalRightStyle;
+        private GUIStyle windowStyle, boxStyle, buttonStyle, labelTitleLeftStyle, labelTitleRightStyle, labelNormalLeftStyle, labelNormalRightStyle;
         private GUILayoutOption[] boxLayoutOptions, buttonLayoutOptions;
         private bool hasInitStyles = false;
 
@@ -67,10 +67,6 @@ namespace KerbalEconomy
             this.buttonStyle.margin = new RectOffset(5, 5, 5, 5);
             this.buttonStyle.normal.textColor = Color.white;
             this.buttonStyle.stretchHeight = true;
-
-            this.scrollStyle = new GUIStyle(HighLogic.Skin.scrollView);
-            this.scrollStyle.margin = new RectOffset();
-            this.scrollStyle.padding = new RectOffset(10, 10, 5, 5);
 
             this.labelTitleLeftStyle = new GUIStyle(HighLogic.Skin.label);
             this.labelTitleLeftStyle.normal.textColor = Color.white;
@@ -118,7 +114,10 @@ namespace KerbalEconomy
         // Runs when the display is being shown.
         private void Window(int windowID)
         {
-            this.scrollPosition = GUILayout.BeginScrollView(this.scrollPosition, this.scrollStyle);
+            GUI.skin = HighLogic.Skin;
+            this.scrollPosition = GUILayout.BeginScrollView(this.scrollPosition);
+            GUI.skin = null;
+
             GUILayout.BeginHorizontal();
 
             this.DrawTime();
