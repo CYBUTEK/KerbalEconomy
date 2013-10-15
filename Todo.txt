@@ -1,6 +1,6 @@
 ﻿* Save and load ledgers from a 'Ledgers' directory.
-	-	Create directory if needed.
-	-	Change file extension from '.txt' to '.csv'.
+DONE	-	Create directory if needed.
+DONE	-	Change file extension from '.txt' to '.csv'.
 
 * Create basic settings manager.
 	-	'Key = Value'

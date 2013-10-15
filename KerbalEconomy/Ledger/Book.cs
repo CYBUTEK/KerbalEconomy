@@ -53,18 +53,23 @@ namespace KerbalEconomy.Ledger
             });
         }
 
+        // Saves the book to file.
         public void Save()
         {
             List<string> rows = new List<string>();
             foreach (Row row in this.rows)
                 rows.Add(row.GetTabbedString());
 
-            File.WriteAllLines(KerbalEconomy.AssemblyPath + filename, rows.ToArray());
+            if (!Directory.Exists(KerbalEconomy.AssemblyPath + "Ledgers"))
+                Directory.CreateDirectory(KerbalEconomy.AssemblyPath + "Ledgers");
+
+            File.WriteAllLines(KerbalEconomy.AssemblyPath + "Ledgers/" + filename, rows.ToArray());
         }
 
+        // Loads the book from file.
         public void Load()
         {
-            if (File.Exists(KerbalEconomy.AssemblyPath + filename))
+            if (File.Exists(KerbalEconomy.AssemblyPath + "Ledgers/" + filename))
             {
                 string[] rows = File.ReadAllLines(KerbalEconomy.AssemblyPath + filename);
 

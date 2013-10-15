@@ -57,7 +57,7 @@
 
             second = (int)value;
 
-            return day + "/" + year + " " + hour.ToString("00") + ":" + minute.ToString("00") + ":" + second.ToString("00");
+            return hour.ToString("00") + ":" + minute.ToString("00") + ":" + second.ToString("00") + " - " + day + "/" + year;
         }
     }
 }
