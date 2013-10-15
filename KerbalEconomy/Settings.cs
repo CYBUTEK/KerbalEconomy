@@ -1,25 +1,62 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace KerbalEconomy.Settings
+namespace KerbalEconomy
 {
-    public class SettingList
+    public class Settings
     {
+        #region Constants
+
+        public const string FILENAME = "Settings.txt";
+        
+        #endregion
+
+        #region Instance
+
+        private static Settings instance;
+        /// <summary>
+        /// Gets the current instance of the Settings object.
+        /// </summary>
+        public static Settings Instance
+        {
+            get
+            {
+                if (instance == null)
+                    instance = new Settings();
+
+                return instance;
+            }
+        }
+
+        #endregion
+
         #region Fields
 
         private Dictionary<string, string> settings = new Dictionary<string, string>();
 
         #endregion
 
+        #region Initialisation
+
+        private Settings()
+        {
+            this.Load();
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
-        /// Gets a setting from the list or returns with a default value.
+        /// Gets a setting from the list or created it and returns with a default value.
         /// </summary>
         public string Get(string key, string defaultValue = "")
         {
             if (this.settings.ContainsKey(key))
                 return this.settings[key];
+
+            if (defaultValue != null && defaultValue.Length > 0)
+                this.settings[key] = defaultValue;
 
             return defaultValue;
         }
@@ -33,26 +70,28 @@ namespace KerbalEconomy.Settings
         }
 
         /// <summary>
-        /// Saves the setting list to the given file.
+        /// Saves settings to file.
         /// </summary>
-        public void Save(string filename)
+        public void Save()
         {
             List<string> lines = new List<string>();
 
             foreach (KeyValuePair<string, string> setting in this.settings)
                 lines.Add(setting.Key + " = " + setting.Value);
 
-            File.WriteAllLines(KerbalEconomy.AssemblyPath + filename, lines.ToArray());
+            File.WriteAllLines(KerbalEconomy.AssemblyPath + FILENAME, lines.ToArray());
         }
 
         /// <summary>
-        /// Loads the setting list from a given file.
+        /// Loads settings from file.
         /// </summary>
-        public void Load(string filename)
+        public void Load()
         {
-            if (File.Exists(KerbalEconomy.AssemblyPath + filename))
+            if (File.Exists(KerbalEconomy.AssemblyPath + FILENAME))
             {
-                string[] lines = File.ReadAllLines(KerbalEconomy.AssemblyPath + filename);
+                this.settings.Clear();
+
+                string[] lines = File.ReadAllLines(KerbalEconomy.AssemblyPath + FILENAME);
 
                 foreach (string line in lines)
                 {

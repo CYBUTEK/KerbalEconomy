@@ -64,6 +64,7 @@ namespace KerbalEconomy.Ledger
                 Directory.CreateDirectory(KerbalEconomy.AssemblyPath + "Ledgers");
 
             File.WriteAllLines(KerbalEconomy.AssemblyPath + "Ledgers/" + filename, rows.ToArray());
+
         }
 
         // Loads the book from file.
@@ -71,7 +72,8 @@ namespace KerbalEconomy.Ledger
         {
             if (File.Exists(KerbalEconomy.AssemblyPath + "Ledgers/" + filename))
             {
-                string[] rows = File.ReadAllLines(KerbalEconomy.AssemblyPath + filename);
+
+                string[] rows = File.ReadAllLines(KerbalEconomy.AssemblyPath + "Ledgers/" + filename);
 
                 this.rows = new List<Row>();
                 foreach (string row in rows)

@@ -62,6 +62,8 @@ namespace KerbalEconomy
 
             if (KerbalEconomy.Instance.Ledger != null)
                 KerbalEconomy.Instance.Ledger.Save();
+
+            Settings.Instance.Save();
         }
     }
 }

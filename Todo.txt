@@ -8,8 +8,8 @@ DONE	-	Saving
 DONE	-	Loading
 
 * Save and load difficulty setting.
-	-	Saving
-	-	Loading
+DONE	-	Saving
+DONE	-	Loading
 
 * Add science gained in a mission to the ledger.
 	-	Difference between start and end of the Flight scene.

@@ -127,7 +127,11 @@ namespace KerbalEconomy
         public double CostRatio
         {
             get { return this.costRatio; }
-            set { this.costRatio = value; }
+            set
+            {
+                this.costRatio = value;
+                Settings.Instance.Set("Cost Ratio", this.costRatio.ToString());
+            }
         }
 
         // This should be replaced with getting and setting actual science values from within KSP.
@@ -148,6 +152,15 @@ namespace KerbalEconomy
         {
             get { return this.science * this.costRatio; }
             set { this.science = value / this.costRatio; }
+        }
+
+        #endregion
+
+        #region Initialisation
+
+        private KerbalEconomy()
+        {
+            this.CostRatio = double.Parse(Settings.Instance.Get("Cost Ratio", this.costRatio.ToString()));
         }
 
         #endregion
