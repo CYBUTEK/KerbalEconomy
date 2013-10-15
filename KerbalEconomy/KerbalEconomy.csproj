@@ -56,9 +56,6 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Todo.txt" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "D:\Projects\KerbalEconomy\Output\*" "D:\Projects\KerbalEconomy\Game\GameData\*" /D /E /C /R /I /K /Y</PostBuildEvent>
