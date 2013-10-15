@@ -19,7 +19,7 @@ DONE * Add science used in R&D to the ledger.
 DONE	-	Difference between start and end of the R&D scene.
 DONE	-	Add transaction to the ledger debiting science.
 
-* Readme file.
+DONE * Readme file.
 
 * Additional functionality.
 DONE	-	Ledger size is adjustable in settings.
