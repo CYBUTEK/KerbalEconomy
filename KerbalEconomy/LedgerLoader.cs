@@ -2,7 +2,7 @@
 
 namespace KerbalEconomy
 {
-    [KSPAddon(KSPAddon.Startup.EveryScene, false)]
+    [KSPAddon(KSPAddon.Startup.MainMenu | KSPAddon.Startup.SpaceCentre | KSPAddon.Startup.EditorAny | KSPAddon.Startup.Flight, false)]
     public class LedgerLoader : MonoBehaviour
     {
         #region Fields
@@ -27,8 +27,6 @@ namespace KerbalEconomy
                 KerbalEconomy.Instance.Ledger = null;
             else if (this.currentScene == GameScenes.SPACECENTER)
                 RenderingManager.AddToPostDrawQueue(0, this.DrawSpaceCentreButton);
-            else
-                RenderingManager.AddToPostDrawQueue(0, LedgerDisplay.Instance.Draw);
         }
 
         // Initialises the styles upon request.
@@ -44,12 +42,14 @@ namespace KerbalEconomy
 
         #region Drawing
 
+        // Runs when in the space centre scene.
         private void DrawSpaceCentreButton()
         {
             if (!this.hasInitStyles) this.InitialiseStyles();
 
-            LedgerDisplay.Instance.Visible = GUI.Toggle(this.buttonPosition, LedgerDisplay.Instance.Visible, "Kerbal Economy Ledger", this.buttonStyle);
-            LedgerDisplay.Instance.Draw();
+            this.showLedger = GUI.Toggle(this.buttonPosition, this.showLedger, "Kerbal Economy Ledger", this.buttonStyle);
+            if (this.showLedger)
+                LedgerDisplay.Instance.Draw();
         }
 
         #endregion
@@ -61,10 +61,7 @@ namespace KerbalEconomy
                 KerbalEconomy.Instance.Ledger = new Ledger.Book(HighLogic.SaveFolder + ".txt");
 
             if (KerbalEconomy.Instance.Ledger != null)
-            {
-                LedgerDisplay.Instance.Visible = false;
                 KerbalEconomy.Instance.Ledger.Save();
-            }
         }
     }
 }

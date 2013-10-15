@@ -1,12 +1,10 @@
-﻿using KerbalEconomy.Extensions;
-using KerbalEconomy.Helpers;
+﻿using KerbalEconomy.Helpers;
 using KerbalEconomy.Ledger;
 using UnityEngine;
 
 namespace KerbalEconomy
 {
-    [KSPAddon(KSPAddon.Startup.Instantly, true)]
-    public class LedgerDisplay : MonoBehaviour
+    public class LedgerDisplay
     {
         #region Constants
 
@@ -23,7 +21,13 @@ namespace KerbalEconomy
         /// </summary>
         public static LedgerDisplay Instance
         {
-            get { return instance; }
+            get
+            {
+                if (instance == null)
+                    instance = new LedgerDisplay();
+
+                return instance;
+            }
         }
 
         #endregion
@@ -31,7 +35,7 @@ namespace KerbalEconomy
         #region Fields
 
         private Rect windowPosition = new Rect(Screen.width / 2f - WINDOW_WIDTH / 2f, Screen.height / 2f - WINDOW_HEIGHT / 2f, WINDOW_WIDTH, WINDOW_HEIGHT);
-        private int windowID = Random.Range(100, int.MaxValue);
+        private int windowID = WindowHelper.GetWindowID();
 
         private GUIStyle windowStyle, buttonStyle, scrollStyle, labelTitleStyle, labelNormalStyle;
         private bool hasInitStyles = false;
@@ -40,26 +44,11 @@ namespace KerbalEconomy
 
         #endregion
 
-        #region Properties
-
-        private bool visible = false;
-        /// <summary>
-        /// Gets and sets whether the display is visible.
-        /// </summary>
-        public bool Visible
-        {
-            get { return this.visible; }
-            set { this.visible = value; }
-        }
-
-        #endregion
-
         #region Initialisation
 
         private void Start()
         {
             instance = this;
-            DontDestroyOnLoad(this);
         }
 
         // Initialises the styles upon request.
@@ -93,8 +82,8 @@ namespace KerbalEconomy
         {
             if (!this.hasInitStyles) this.InitialiseStyles();
 
-            if (this.visible && KerbalEconomy.Instance.Ledger != null)
-                this.windowPosition = GUILayout.Window(this.windowID, this.windowPosition, this.Window, "Kerbal Economy Ledger", this.windowStyle).ClampInsideScreen();
+            if (KerbalEconomy.Instance.Ledger != null)
+                this.windowPosition = GUILayout.Window(this.windowID, this.windowPosition, this.Window, "Kerbal Economy Ledger", this.windowStyle);
         }
 
         // Runs when the display is being shown.
@@ -108,13 +97,11 @@ namespace KerbalEconomy
             this.DrawDebit();
             this.DrawCredit();
 
-            // NOTE: Not displaying balance as it will most likely be out of synch.
-            //this.DrawBalance();
+            // NOTE: Balance will be accurate at the time but will probably be out of synch with other transactions.
+            this.DrawBalance();
 
             GUILayout.EndHorizontal();
             GUILayout.EndScrollView();
-
-            GUI.DragWindow();
         }
 
         private void DrawTime()
