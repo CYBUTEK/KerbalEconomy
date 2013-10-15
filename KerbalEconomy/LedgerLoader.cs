@@ -7,12 +7,14 @@ namespace KerbalEconomy
     {
         #region Fields
 
-        private GameScenes currentScene;
+        private GameScenes currentScene = HighLogic.LoadedScene;
 
         private Rect buttonPosition = new Rect(Screen.width - 250f - 50f, Screen.height - 35f, 250f, 33f);
         private GUIStyle buttonStyle;
         private bool hasInitStyles = false;
         private bool showLedger = false;
+
+        private double science = KerbalEconomy.Instance.Science;
 
         #endregion
 
@@ -21,8 +23,6 @@ namespace KerbalEconomy
         // Runs when the object is created.
         private void Start()
         {
-            this.currentScene = HighLogic.LoadedScene;
-
             if (this.currentScene == GameScenes.MAINMENU && KerbalEconomy.Instance.Ledger != null)
                 KerbalEconomy.Instance.Ledger = null;
             else if (this.currentScene == GameScenes.SPACECENTER)
@@ -59,6 +59,19 @@ namespace KerbalEconomy
         {
             if (this.currentScene == GameScenes.MAINMENU && HighLogic.LoadedScene == GameScenes.SPACECENTER)
                 KerbalEconomy.Instance.Ledger = new Ledger.Book(HighLogic.SaveFolder + ".txt");
+
+            if (this.currentScene == GameScenes.FLIGHT)
+            {
+                if (this.science < KerbalEconomy.Instance.Science)
+                    KerbalEconomy.Instance.Credit("Mission Science", KerbalEconomy.Instance.Science - this.science);
+            }
+
+            // TODO: Add in R&D scene.
+            //if (this.currentScene == GameScenes.RESEARCH)
+            //{
+            //    if (this.science > KerbalEconomy.Instance.Science)
+            //        KerbalEconomy.Instance.Debit("Research & Development", this.science - KerbalEconomy.Instance.Science);
+            //}
 
             if (KerbalEconomy.Instance.Ledger != null)
                 KerbalEconomy.Instance.Ledger.Save();
