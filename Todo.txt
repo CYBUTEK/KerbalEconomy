@@ -22,5 +22,5 @@ DONE	-	Add transaction to the ledger debiting science.
 * Readme file.
 
 * Additional functionality.
-	-	Ledger size is adjustable in settings.
+DONE	-	Ledger size is adjustable in settings.
 	-	Science (pre-0.22) adjustable in settings.

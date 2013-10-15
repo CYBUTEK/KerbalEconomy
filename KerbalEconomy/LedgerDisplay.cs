@@ -10,13 +10,6 @@ namespace KerbalEconomy
 {
     public class LedgerDisplay
     {
-        #region Constants
-
-        public const float WINDOW_WIDTH = 700f;
-        public const float WINDOW_HEIGHT = 200f;
-
-        #endregion
-
         #region Instance
 
         private static LedgerDisplay instance;
@@ -38,11 +31,11 @@ namespace KerbalEconomy
 
         #region Fields
 
-        private Rect windowPosition = new Rect(Screen.width / 2f - WINDOW_WIDTH / 2f, Screen.height / 2f - WINDOW_HEIGHT / 2f, WINDOW_WIDTH, WINDOW_HEIGHT);
+        private Rect windowPosition;
         private int windowID = WindowHelper.GetWindowID();
 
         private GUIStyle windowStyle, boxStyle, buttonStyle, labelTitleLeftStyle, labelTitleRightStyle, labelNormalLeftStyle, labelNormalRightStyle;
-        private GUILayoutOption[] boxLayoutOptions, buttonLayoutOptions;
+        private GUILayoutOption[] boxLayoutOptions, buttonLayoutOptions, blankLayoutOptions;
         private bool hasInitStyles = false;
 
         private Vector2 scrollPosition = Vector2.zero;
@@ -51,9 +44,12 @@ namespace KerbalEconomy
 
         #region Initialisation
 
-        private void Start()
+        // Constructor used to set the window dimensions.
+        private LedgerDisplay()
         {
-            instance = this;
+            float width = float.Parse(Settings.Instance.Get("Ledger Width", "700"));
+            float height = float.Parse(Settings.Instance.Get("Ledger Height", "300"));
+            this.windowPosition = new Rect(Screen.width / 2f - width / 2f, Screen.height / 2f - height / 2f, width, height);
         }
 
         // Initialises the styles upon request.
@@ -100,6 +96,8 @@ namespace KerbalEconomy
                 GUILayout.Width(100f),
                 GUILayout.Height(30f)
             };
+
+            this.blankLayoutOptions = new GUILayoutOption[] { };
         }
 
         #endregion
@@ -119,7 +117,7 @@ namespace KerbalEconomy
         private void Window(int windowID)
         {
             GUI.skin = HighLogic.Skin;
-            this.scrollPosition = GUILayout.BeginScrollView(this.scrollPosition);
+            this.scrollPosition = GUILayout.BeginScrollView(this.scrollPosition, false, true, this.blankLayoutOptions);
             GUI.skin = null;
 
             GUILayout.BeginHorizontal();
