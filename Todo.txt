@@ -12,9 +12,9 @@ DONE	-	Saving
 DONE	-	Loading
 
 * Add science gained in a mission to the ledger.
-	-	Difference between start and end of the Flight scene.
-	-	Add transaction to the ledger crediting science.
+DONE	-	Difference between start and end of the Flight scene.
+DONE	-	Add transaction to the ledger crediting science.
 
 * Add science used in R&D to the ledger.
-	-	Difference between start and end of the R&D scene.
-	-	Add transaction to the ledger debiting science.
+DONE	-	Difference between start and end of the R&D scene.
+DONE	-	Add transaction to the ledger debiting science.

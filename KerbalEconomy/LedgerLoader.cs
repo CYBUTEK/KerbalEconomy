@@ -58,7 +58,7 @@ namespace KerbalEconomy
         private void OnDestroy()
         {
             if (this.currentScene == GameScenes.MAINMENU && HighLogic.LoadedScene == GameScenes.SPACECENTER)
-                KerbalEconomy.Instance.Ledger = new Ledger.Book(HighLogic.SaveFolder + ".txt");
+                KerbalEconomy.Instance.Ledger = new Ledger.Book(HighLogic.SaveFolder + ".csv");
 
             if (this.currentScene == GameScenes.FLIGHT)
             {
