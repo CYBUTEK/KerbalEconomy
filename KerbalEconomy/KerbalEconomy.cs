@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace KerbalEconomy
 {
-    [KSPAddon(KSPAddon.Startup.Instantly, true)]
+    [KSPAddon(KSPAddon.Startup.Instantly, false)]
     public class KerbalEconomy : MonoBehaviour
     {
         #region Constants
@@ -19,7 +19,7 @@ namespace KerbalEconomy
         /// <summary>
         /// Current version of the Kerbal Economy assembly.
         /// </summary>
-        public const string AssemblyVersion = "1.0";
+        public const string AssemblyVersion = "1.0.1";
 
         public const float EASY = 2000f;
         public const float NORMAL = 1000f;
@@ -210,8 +210,15 @@ namespace KerbalEconomy
         // Initialiser used to load settings.
         private void Awake()
         {
-            DontDestroyOnLoad(this);
-            Instance = this;
+            if (Instance == null)
+            {
+                DontDestroyOnLoad(this);
+                Instance = this;
+            }
+            else
+            {
+                Destroy(this);
+            }
             this.costRatio = float.Parse(Settings.Instance.Get("Cost Ratio", this.costRatio.ToString()));
         }
 

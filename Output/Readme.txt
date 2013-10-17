@@ -1,5 +1,5 @@
-Kerbal Economy v1.0 (pre-0.22 showcase)
-=======================================
+Kerbal Economy v1.0
+===================
 
 ABOUT
 -----
@@ -31,6 +31,7 @@ via the ledger.
 The ledger will record transactions such as:
   - Ship/Plane construction.
   - Science gained on missions.
+  - Science gained from recovered vessels.
   - Science spent in the R&D department.
 
 Ledgers are available within the 'GameData/KerbalEconomy/Ledgers' folder, and are
@@ -45,7 +46,6 @@ going into the space centre and opening the ledger first.  That will create the
 settings file with all values that are adjustable.
   - Cost Ratio (for something other than default difficulties). 
   - Ledger sizing (width/height).
-  - Science points (available to change only in pre-0.22).
 
 
 CREDITS & LICENSE
