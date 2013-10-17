@@ -1,0 +1,11 @@
+Kerbal Economy
+==============
+
+1.0.1
+ - Fixed run-once bug and Module Manager conflicts.
+
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+Kerbal Economy API
+==================

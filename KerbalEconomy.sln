@@ -5,8 +5,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KerbalEconomy", "KerbalEcon
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CADA4DDD-D9F2-4AEA-A7D6-6A05C0D9D953}"
 	ProjectSection(SolutionItems) = preProject
+		Changelog.txt = Changelog.txt
 		Todo.txt = Todo.txt
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KerbalEconomyAPI", "KerbalEconomyAPI\KerbalEconomyAPI.csproj", "{2439B45B-529A-4796-A6BD-3F8C002334FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +22,10 @@ Global
 		{E88F7789-ED43-41D0-9273-4307B14D0AAA}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{E88F7789-ED43-41D0-9273-4307B14D0AAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E88F7789-ED43-41D0-9273-4307B14D0AAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2439B45B-529A-4796-A6BD-3F8C002334FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2439B45B-529A-4796-A6BD-3F8C002334FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2439B45B-529A-4796-A6BD-3F8C002334FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2439B45B-529A-4796-A6BD-3F8C002334FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
