@@ -2,13 +2,17 @@
 // AUTHOR:  CYBUTEK
 // LICENSE: Attribution-NonCommercial-ShareAlike 3.0 Unported
 
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using KerbalEconomy.Ledger;
+using UnityEngine;
 
 namespace KerbalEconomy
 {
-    public class KerbalEconomy
+    [KSPAddon(KSPAddon.Startup.Instantly, true)]
+    public class KerbalEconomy : MonoBehaviour
     {
         #region Constants
 
@@ -17,9 +21,9 @@ namespace KerbalEconomy
         /// </summary>
         public const string AssemblyVersion = "1.0";
 
-        public const double EASY = 2000d;
-        public const double NORMAL = 1000d;
-        public const double HARD = 500d;
+        public const float EASY = 2000f;
+        public const float NORMAL = 1000f;
+        public const float HARD = 500f;
 
         #endregion
 
@@ -78,37 +82,36 @@ namespace KerbalEconomy
         /// <summary>
         /// Converts a monitary value into science.
         /// </summary>
-        public static double ToScience(double monies)
+        public static float ToScience(float monies)
         {
-            return monies / Instance.costRatio;
+            return monies / Instance.CostRatio;
         }
 
         /// <summary>
         /// Converts a science value into monies.
         /// </summary>
-        public static double ToMonies(double science)
+        public static float ToMonies(float science)
         {
-            return science * Instance.costRatio;
+            return science * Instance.CostRatio;
         }
+
+        #endregion
+
+        #region Fields
+
+        private Dictionary<Row, bool> rowsToProcess = new Dictionary<Row, bool>();
+        private Stopwatch storeScienceTimer = new Stopwatch();
+        private bool storeScienceTimerEnabled = false;
+        private long storeScienceTimerDuration = 5000;
 
         #endregion
 
         #region Instance
 
-        private static KerbalEconomy instance;
         /// <summary>
         /// Gets the current instance of the KerbalEconomy object.
         /// </summary>
-        public static KerbalEconomy Instance
-        {
-            get
-            {
-                if (instance == null)
-                    instance = new KerbalEconomy();
-
-                return instance;
-            }
-        }
+        public static KerbalEconomy Instance { get; private set; }
 
         #endregion
 
@@ -124,55 +127,125 @@ namespace KerbalEconomy
             set { this.ledger = value; }
         }
 
-        private double costRatio = 1000d;
+        private float costRatio = 1000f;
         /// <summary>
         /// Gets and sets the monies to science ratio.
         /// </summary>
-        public double CostRatio
+        public float CostRatio
         {
             get { return this.costRatio; }
             set
             {
                 this.costRatio = value;
                 Settings.Instance.Set("Cost Ratio", this.costRatio.ToString());
+                print("[KerbalEconomy]: Changed Cost Ratio to " + this.costRatio + ".");
             }
         }
 
-        // TODO: This should be replaced with getting and setting actual science values from within KSP.
-        private double science = 100d;
+        /// <summary>
+        /// Gets if KSP returns a not null value for science..
+        /// </summary>
+        public bool ScienceIsNotNull
+        {
+            get { return ResearchAndDevelopment.Instance != null; }
+        }
+
+        private bool storageMode = true;
+        /// <summary>
+        /// Gets and sets whether KerbalEconomy should store changes to be processed later.
+        /// </summary>
+        public bool StorageMode
+        {
+            get
+            {
+                return this.storageMode;
+            }
+            set
+            {
+                if (!this.storageMode && value)
+                {
+                    print("[KerbalEconomy]: Storage Mode Enabled.");
+                    this.storageMode = value;
+                }
+                else if (this.storageMode && !value)
+                {
+                    this.storeScienceTimer.Reset();
+                    this.storeScienceTimer.Start();
+                    this.storeScienceTimerEnabled = true;
+                }
+            }
+        }
+
+        private float science = 0f;
         /// <summary>
         /// Gets and sets the amount of stored science.
         /// </summary>
-        public double Science
+        public float Science
         {
-            get { return this.science; }
+            get
+            {
+                return ResearchAndDevelopment.Instance.Science;
+            }
             set
             {
-                this.science = value;
-                Settings.Instance.Set("Science", this.science.ToString());
+                float previous = ResearchAndDevelopment.Instance.Science;
+                ResearchAndDevelopment.Instance.Science = value;
+                print("[KerbalEconomy]: Changed Science by " + (ResearchAndDevelopment.Instance.Science - previous) + " to " + ResearchAndDevelopment.Instance.Science + ".");
             }
         }
 
         /// <summary>
         /// Gets and sets the budget calculated from the stored science.
         /// </summary>
-        public double Monies
+        public float Monies
         {
-            get { return this.science * this.costRatio; }
-            set { this.science = value / this.costRatio; }
+            get { return this.Science * this.costRatio; }
+            set { this.Science = value / this.costRatio; }
         }
 
         #endregion
 
         #region Initialisation
 
-        // Constructor used to load settings.
-        private KerbalEconomy()
+        // Initialiser used to load settings.
+        private void Awake()
         {
-            this.costRatio = double.Parse(Settings.Instance.Get("Cost Ratio", this.costRatio.ToString()));
+            DontDestroyOnLoad(this);
+            Instance = this;
+            this.costRatio = float.Parse(Settings.Instance.Get("Cost Ratio", this.costRatio.ToString()));
+        }
 
-            // TODO: Only in pre-0.22 for testing.
-            this.science = double.Parse(Settings.Instance.Get("Science", this.science.ToString()));
+        #endregion
+
+        #region Update
+
+        // Update used to manage science and ledger processing.
+        private void Update()
+        {
+            if (HighLogic.CurrentGame != null && HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
+            {
+                if (this.storeScienceTimerEnabled && this.storeScienceTimer.ElapsedMilliseconds >= this.storeScienceTimerDuration)
+                {
+                    this.storeScienceTimerEnabled = false;
+                    this.storeScienceTimer.Stop();
+                    this.storageMode = false;
+                    print("[KerbalEconomy]: Storage Mode Disabled.");
+                }
+
+                if (this.rowsToProcess.Count > 0 && !this.storageMode && this.ScienceIsNotNull)
+                {
+                    foreach (KeyValuePair<Row, bool> row in this.rowsToProcess)
+                    {
+                        if (row.Value)
+                            this.AddScience(row.Key.Credit - row.Key.Debit);
+
+                        this.ledger.AddRow(row.Key.UniversalTime, row.Key.Transaction, row.Key.Debit, row.Key.Credit, this.Science);
+                        print("[KerbalEconomy]: Added Row to Ledger.");
+                    }
+
+                    this.rowsToProcess.Clear();
+                }
+            }
         }
 
         #endregion
@@ -182,19 +255,59 @@ namespace KerbalEconomy
         /// <summary>
         /// Credit your economy's science. (Put in)
         /// </summary>
-        public void Credit(string transaction, double science)
+        public void Credit(string transaction, float science, bool adjust = true)
         {
-            this.science += science;
-            this.ledger.AddRow(HighLogic.CurrentGame.UniversalTime, transaction, 0d, science, this.science);
+            if (!this.storageMode && this.ScienceIsNotNull)
+            {
+                if (adjust) this.AddScience(science);
+                this.ledger.AddRow(HighLogic.CurrentGame.UniversalTime, transaction, 0f, science, this.Science);
+                print("[KerbalEconomy]: Added Row to Ledger.");
+            }
+            else
+            {
+                this.rowsToProcess.Add(new Row(HighLogic.CurrentGame.UniversalTime, transaction, 0f, science, 0f), adjust);
+                print("[KerbalEconomy]: Added Row to Process Queue.");
+            }
         }
 
         /// <summary>
         /// Debit your economy's science. (Take out)
         /// </summary>
-        public void Debit(string transaction, double science)
+        public void Debit(string transaction, float science, bool adjust = true)
         {
-            this.science -= science;
-            this.ledger.AddRow(HighLogic.CurrentGame.UniversalTime, transaction, science, 0d, this.science);
+            if (!this.storageMode && this.ScienceIsNotNull)
+            {
+                if (adjust) this.SubScience(science);
+                this.ledger.AddRow(HighLogic.CurrentGame.UniversalTime, transaction, science, 0f, this.Science);
+                print("[KerbalEconomy]: Added Row to Ledger.");
+            }
+            else
+            {
+                this.rowsToProcess.Add(new Row(HighLogic.CurrentGame.UniversalTime, transaction, science, 0f, 0f), adjust);
+                print("[KerbalEconomy]: Added Row to Ledger Process Queue.");
+            }
+        }
+
+        /// <summary>
+        /// Adds an amount of science to the pool.
+        /// </summary>
+        public void AddScience(float amount)
+        {
+            if (!this.storageMode)
+                this.Science += amount;
+            else
+                this.science += amount;
+        }
+
+        /// <summary>
+        /// Subtracts an amount of science from the pool.
+        /// </summary>
+        public void SubScience(float amount)
+        {
+            if (!this.storageMode)
+                this.Science -= amount;
+            else
+                this.science -= amount;
         }
 
         #endregion

@@ -45,7 +45,7 @@ namespace KerbalEconomy.Ledger
         /// <summary>
         /// Adds a new ledger row.
         /// </summary>
-        public void AddRow(double universalTime, string transaction, double debit, double credit, double balance)
+        public void AddRow(double universalTime, string transaction, float debit, float credit, float balance)
         {
             rows.Add(new Row()
             {

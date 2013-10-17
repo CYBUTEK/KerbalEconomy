@@ -32,7 +32,10 @@ namespace KerbalEconomy
         // Runs when the object is created.
         private void Start()
         {
-            RenderingManager.AddToPostDrawQueue(0, this.Draw);
+            if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
+            {
+                RenderingManager.AddToPostDrawQueue(0, this.Draw);
+            }
         }
 
         // Initialises the styles upon request.
@@ -76,7 +79,10 @@ namespace KerbalEconomy
         // Runs when the object is told to update.
         private void Update()
         {
-            cost = EditorLogic.fetch.ship.Parts.Count > 0 ? EditorLogic.fetch.ship.Parts.Cost() : 0;
+            if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
+            {
+                cost = EditorLogic.fetch.ship.Parts.Count > 0 ? EditorLogic.fetch.ship.Parts.Cost() : 0;
+            }
         }
 
         // Runs when KSP calls the draw queue.
@@ -120,12 +126,17 @@ namespace KerbalEconomy
         // Runs when the object is destroyed.
         private void OnDestroy()
         {
-            if (HighLogic.LoadedSceneIsFlight)
+            if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
             {
-                if (EditorLogic.fetch.editorType == EditorLogic.EditorMode.VAB)
-                    KerbalEconomy.Instance.Debit("Ship Construction", KerbalEconomy.ToScience(cost));
-                else if (EditorLogic.fetch.editorType == EditorLogic.EditorMode.SPH)
-                    KerbalEconomy.Instance.Debit("Plane Construction", KerbalEconomy.ToScience(cost));
+                if (HighLogic.LoadedSceneIsFlight)
+                {
+                    KerbalEconomy.Instance.StorageMode = true;
+
+                    if (EditorLogic.fetch.editorType == EditorLogic.EditorMode.VAB)
+                        KerbalEconomy.Instance.Debit("Ship Construction", KerbalEconomy.ToScience(cost));
+                    else if (EditorLogic.fetch.editorType == EditorLogic.EditorMode.SPH)
+                        KerbalEconomy.Instance.Debit("Plane Construction", KerbalEconomy.ToScience(cost));
+                }
             }
         }
     }

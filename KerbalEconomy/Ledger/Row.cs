@@ -19,9 +19,9 @@ namespace KerbalEconomy.Ledger
             return new Row() {
                 UniversalTime = double.Parse(row[0]),
                 Transaction = row[1],
-                Debit = double.Parse(row[2]),
-                Credit = double.Parse(row[3]),
-                Balance = double.Parse(row[4])
+                Debit = float.Parse(row[2]),
+                Credit = float.Parse(row[3]),
+                Balance = float.Parse(row[4])
             };
         }
 
@@ -49,34 +49,49 @@ namespace KerbalEconomy.Ledger
             set { this.transaction = value; }
         }
 
-        private double debit = 0d;
+        private float debit = 0f;
         /// <summary>
         /// Gets and sets the amount debited.
         /// </summary>
-        public double Debit
+        public float Debit
         {
             get { return this.debit; }
             set { this.debit = value; }
         }
 
-        private double credit = 0d;
+        private float credit = 0f;
         /// <summary>
         /// Gets and sets the amount credited.
         /// </summary>
-        public double Credit
+        public float Credit
         {
             get { return this.credit; }
             set { this.credit = value; }
         }
 
-        private double balance = 0d;
+        private float balance = 0f;
         /// <summary>
         /// Gets and sets the final balance.
         /// </summary>
-        public double Balance
+        public float Balance
         {
             get { return this.balance; }
             set { this.balance = value; }
+        }
+
+        #endregion
+
+        #region Initialisation
+
+        public Row() { }
+
+        public Row(double universalTime, string transaction, float debit, float credit, float balance)
+        {
+            this.universalTime = universalTime;
+            this.transaction = transaction;
+            this.debit = debit;
+            this.credit = credit;
+            this.balance = balance;
         }
 
         #endregion

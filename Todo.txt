@@ -24,3 +24,9 @@ DONE * Readme file.
 * Additional functionality.
 DONE	-	Ledger size is adjustable in settings.
 DONE	-	Science (pre-0.22) adjustable in settings.
+  - Recovered part costs are added back into science pool.
+
+* KerbalEconomyAPI
+	-	Allow usage without errors even if Kerbal Economy is not installed.
+	-	Add/Subtract science points.
+	-	Allow adding of transactions to the ledger.

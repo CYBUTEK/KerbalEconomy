@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace KerbalEconomy
 {
-    [KSPAddon(KSPAddon.Startup.MainMenu | KSPAddon.Startup.SpaceCentre | KSPAddon.Startup.EditorAny | KSPAddon.Startup.Flight, false)]
+    [KSPAddon(KSPAddon.Startup.EveryScene, false)]
     public class LedgerLoader : MonoBehaviour
     {
         #region Fields
@@ -16,9 +16,10 @@ namespace KerbalEconomy
         private Rect buttonPosition = new Rect(Screen.width - 250f - 50f, Screen.height - 35f, 250f, 33f);
         private GUIStyle buttonStyle;
         private bool hasInitStyles = false;
+        private bool hasInitScience = false;
         private bool showLedger = false;
 
-        private double science = KerbalEconomy.Instance.Science;
+        private float science = 0f;
 
         #endregion
 
@@ -26,11 +27,16 @@ namespace KerbalEconomy
 
         // Runs when the object is created.
         private void Start()
-        {
+        { 
             if (this.currentScene == GameScenes.MAINMENU && KerbalEconomy.Instance.Ledger != null)
                 KerbalEconomy.Instance.Ledger = null;
             else if (this.currentScene == GameScenes.SPACECENTER)
-                RenderingManager.AddToPostDrawQueue(0, this.DrawSpaceCentreButton);
+            {
+                if (HighLogic.CurrentGame != null && HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
+                {
+                    RenderingManager.AddToPostDrawQueue(0, this.DrawSpaceCentreButton);
+                }
+            }
         }
 
         // Initialises the styles upon request.
@@ -44,7 +50,52 @@ namespace KerbalEconomy
 
         #endregion
 
-        #region Drawing
+        #region Update and Drawing
+
+        // Runs continuously whilst the object is alive.
+        private void Update()
+        {
+            if (HighLogic.CurrentGame != null && HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
+            {
+                // Initialise the economy on scene change.
+                if (!this.hasInitScience && KerbalEconomy.Instance.ScienceIsNotNull)
+                {
+                    this.hasInitScience = true;
+                    KerbalEconomy.Instance.StorageMode = false;
+                    this.science = KerbalEconomy.Instance.Science;
+                }
+
+                if (this.currentScene == GameScenes.SPACECENTER)
+                {
+                    if (KerbalEconomy.Instance.ScienceIsNotNull)
+                    {
+                        // Science lost through research and development.
+                        if (this.science > KerbalEconomy.Instance.Science)
+                        {
+                            KerbalEconomy.Instance.Debit("Research & Development", this.science - KerbalEconomy.Instance.Science, false);
+                            this.science = KerbalEconomy.Instance.Science;
+                        }
+                        else if (this.science < KerbalEconomy.Instance.Science) // Science recovered from vessel.
+                        {
+                            KerbalEconomy.Instance.Credit("Recovered Science", KerbalEconomy.Instance.Science - this.science, false);
+                            this.science = KerbalEconomy.Instance.Science;
+                        }
+                    }
+                }
+
+                if (this.currentScene == GameScenes.TRACKSTATION)
+                {
+                    if (KerbalEconomy.Instance.ScienceIsNotNull)
+                    {
+                        if (this.science < KerbalEconomy.Instance.Science) // Science recovered from vessel.
+                        {
+                            KerbalEconomy.Instance.Credit("Recovered Science", KerbalEconomy.Instance.Science - this.science, false);
+                            this.science = KerbalEconomy.Instance.Science;
+                        }
+                    }
+                }
+            }
+        }
 
         // Runs when in the space centre scene.
         private void DrawSpaceCentreButton()
@@ -61,26 +112,23 @@ namespace KerbalEconomy
         // Runs when the object is being destroyed.
         private void OnDestroy()
         {
-            if (this.currentScene == GameScenes.MAINMENU && HighLogic.LoadedScene == GameScenes.SPACECENTER)
-                KerbalEconomy.Instance.Ledger = new Ledger.Book(HighLogic.SaveFolder + ".csv");
-
-            if (this.currentScene == GameScenes.FLIGHT)
+            if (HighLogic.CurrentGame != null && HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
             {
-                if (this.science < KerbalEconomy.Instance.Science)
-                    KerbalEconomy.Instance.Credit("Mission Science", KerbalEconomy.Instance.Science - this.science);
+                if (this.currentScene == GameScenes.MAINMENU && HighLogic.LoadedScene == GameScenes.SPACECENTER)
+                    KerbalEconomy.Instance.Ledger = new Ledger.Book(HighLogic.SaveFolder + ".csv");
+
+                // Science gained through missions.
+                if (this.currentScene == GameScenes.FLIGHT)
+                {
+                    if (KerbalEconomy.Instance.ScienceIsNotNull && this.science < KerbalEconomy.Instance.Science)
+                        KerbalEconomy.Instance.Credit("Mission Science", KerbalEconomy.Instance.Science - this.science, false);
+                }
+
+                if (KerbalEconomy.Instance.Ledger != null)
+                    KerbalEconomy.Instance.Ledger.Save();
+
+                Settings.Instance.Save();
             }
-
-            // TODO: Add in R&D scene.
-            //if (this.currentScene == GameScenes.RESEARCH)
-            //{
-            //    if (this.science > KerbalEconomy.Instance.Science)
-            //        KerbalEconomy.Instance.Debit("Research & Development", this.science - KerbalEconomy.Instance.Science);
-            //}
-
-            if (KerbalEconomy.Instance.Ledger != null)
-                KerbalEconomy.Instance.Ledger.Save();
-
-            Settings.Instance.Save();
         }
     }
 }
