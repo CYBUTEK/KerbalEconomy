@@ -1,19 +1,13 @@
 ﻿* In-Flight Display
 	-	Show total science earned whilst in flight.
 	-	Show equivilant cash value.
-	-	Recover & Recycle button.
 
 * Recover & Recycling
-	-	Only shows when within a certain distance of KSC.
 	-	If not yet launched you will get 100% value back.
-	-	Recyclable value is a percentage based on difficulty.
+	-	Recoverable value is a percentage based on difficulty.
 		+	Easy:	90%
 		+	Normal:	75%
 		+	Hard:	50%
-	-	Distance ring from KSC depends on difficulty.
-		+	Easy:	100km
-		+	Normal:	50km
-		+	Hard:	10km
 
 DONE * Save and load ledgers from a 'Ledgers' directory.
 DONE	-	Create directory if needed.
