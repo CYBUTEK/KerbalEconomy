@@ -131,11 +131,7 @@ namespace KerbalEconomy
                 if (HighLogic.LoadedSceneIsFlight)
                 {
                     KerbalEconomy.Instance.StorageMode = true;
-
-                    if (EditorLogic.fetch.editorType == EditorLogic.EditorMode.VAB)
-                        KerbalEconomy.Instance.Debit("Ship Construction", KerbalEconomy.ToScience(cost));
-                    else if (EditorLogic.fetch.editorType == EditorLogic.EditorMode.SPH)
-                        KerbalEconomy.Instance.Debit("Plane Construction", KerbalEconomy.ToScience(cost));
+                    KerbalEconomy.Instance.Debit(EditorLogic.startPod.vesselType + " Construction", KerbalEconomy.ToScience(cost));
                 }
             }
         }

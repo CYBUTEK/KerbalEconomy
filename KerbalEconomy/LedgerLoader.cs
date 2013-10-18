@@ -61,17 +61,17 @@ namespace KerbalEconomy
         {
             if (HighLogic.CurrentGame != null && HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
             {
-                // Initialise the economy on scene change.
-                if (!this.hasInitScience && KerbalEconomy.Instance.ScienceIsNotNull)
+                if (KerbalEconomy.Instance.ScienceIsNotNull)
                 {
-                    this.hasInitScience = true;
-                    KerbalEconomy.Instance.StorageMode = false;
-                    this.science = KerbalEconomy.Instance.Science;
-                }
+                    // Initialise the economy on scene change.
+                    if (!this.hasInitScience)
+                    {
+                        this.hasInitScience = true;
+                        KerbalEconomy.Instance.StorageMode = false;
+                        this.science = KerbalEconomy.Instance.Science;
+                    }
 
-                if (this.currentScene == GameScenes.SPACECENTER)
-                {
-                    if (KerbalEconomy.Instance.ScienceIsNotNull)
+                    if (this.currentScene == GameScenes.SPACECENTER)
                     {
                         // Science lost through research and development.
                         if (this.science > KerbalEconomy.Instance.Science)
@@ -79,24 +79,34 @@ namespace KerbalEconomy
                             KerbalEconomy.Instance.Debit("Research & Development", this.science - KerbalEconomy.Instance.Science, false);
                             this.science = KerbalEconomy.Instance.Science;
                         }
-                        else if (Recovery.Instance.Recovered && this.science + Recovery.Instance.RecoveryScience < KerbalEconomy.Instance.Science) // Science recovered from vessel.
+                        else if (Recovery.Instance.Recovered)
                         {
-                            KerbalEconomy.Instance.Credit("Recovered Science", KerbalEconomy.Instance.Science - (this.science + Recovery.Instance.RecoveryScience), false);
-                            Recovery.Instance.Recovered = false;
-                            this.science = KerbalEconomy.Instance.Science;
+                            // Science recovered from vessel.
+                            float recoverdScience = Mathf.Round((KerbalEconomy.Instance.Science - (this.science + Recovery.Instance.RecoveryScience)) * 100f) / 100f;
+
+                            if (recoverdScience > 0f)
+                            {
+                                KerbalEconomy.Instance.Credit("Recovered Science", recoverdScience, false);
+                                Recovery.Instance.Recovered = false;
+                                this.science = KerbalEconomy.Instance.Science;
+                            }
                         }
                     }
-                }
-                else if (this.currentScene == GameScenes.TRACKSTATION)
-                {
-                    if (KerbalEconomy.Instance.ScienceIsNotNull)
+                    else if (this.currentScene == GameScenes.TRACKSTATION)
                     {
-                        if (Recovery.Instance.Recovered && this.science + Recovery.Instance.RecoveryScience < KerbalEconomy.Instance.Science) // Science recovered from vessel.
+                        if (Recovery.Instance.Recovered) 
                         {
-                            KerbalEconomy.Instance.Credit("Recovered Science", KerbalEconomy.Instance.Science - this.science, false);
-                            Recovery.Instance.Recovered = false;
-                            this.science = KerbalEconomy.Instance.Science;
+                            // Science recovered from vessel.
+                            float recoveredScience = Mathf.Round((Recovery.Instance.RecoveryScience - this.science) * 100f) / 100f;
+
+                            if (recoveredScience > 0f)
+                            {
+                                KerbalEconomy.Instance.Credit("Recovered Science", recoveredScience, false);
+                                Recovery.Instance.Recovered = false;
+                                this.science = KerbalEconomy.Instance.Science;
+                            }
                         }
+
                     }
                 }
             }

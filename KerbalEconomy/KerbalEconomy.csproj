@@ -34,6 +34,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Extensions\ProtoPartSnapshotListExtensions.cs" />
     <Compile Include="Extensions\PartListExtensions.cs" />
     <Compile Include="FlightDisplay.cs" />
     <Compile Include="Recovery.cs" />

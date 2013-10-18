@@ -30,9 +30,10 @@ namespace KerbalEconomy
 
         #region Initialisaton
 
+        // Constructor initialises the recovery event callback.
         private Recovery()
         {
-            GameEvents.OnVesselRecoveryRequested.Add(this.OnRecovery);
+            GameEvents.onVesselRecovered.Add(this.OnRecovery);
         }
 
         #endregion
@@ -70,13 +71,13 @@ namespace KerbalEconomy
 
         #region Private Events
 
-        private void OnRecovery(Vessel vessel)
+        // Called when a vessel is recovered.
+        private void OnRecovery(ProtoVessel vessel)
         {
             this.recovered = true;
-            this.recoveryMoney = vessel.Parts.Cost();
+            this.recoveryMoney = vessel.protoPartSnapshots.Cost();
 
-            KerbalEconomy.Instance.StorageMode = true;
-            KerbalEconomy.Instance.Credit("Recovered Vessel", KerbalEconomy.ToScience(this.recoveryMoney));
+            KerbalEconomy.Instance.Credit(vessel.vesselType + " Recovery", KerbalEconomy.ToScience(this.recoveryMoney));
         }
 
         #endregion
