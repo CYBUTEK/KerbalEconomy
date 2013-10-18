@@ -84,7 +84,7 @@ namespace KerbalEconomy
         /// </summary>
         public static float ToScience(float monies)
         {
-            return monies / Instance.CostRatio;
+            return Mathf.Round((monies / Instance.CostRatio) * 100f) / 100f;
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace KerbalEconomy
             set
             {
                 float previous = ResearchAndDevelopment.Instance.Science;
-                ResearchAndDevelopment.Instance.Science = value;
+                ResearchAndDevelopment.Instance.Science = Mathf.Round(value * 100f) / 100f;
                 print("[KerbalEconomy]: Changed Science by " + (ResearchAndDevelopment.Instance.Science - previous) + " to " + ResearchAndDevelopment.Instance.Science + ".");
             }
         }
@@ -215,10 +215,7 @@ namespace KerbalEconomy
                 DontDestroyOnLoad(this);
                 Instance = this;
             }
-            else
-            {
-                Destroy(this);
-            }
+
             this.costRatio = float.Parse(Settings.Instance.Get("Cost Ratio", this.costRatio.ToString()));
         }
 

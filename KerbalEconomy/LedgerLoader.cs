@@ -2,6 +2,7 @@
 // AUTHOR:  CYBUTEK
 // LICENSE: Attribution-NonCommercial-ShareAlike 3.0 Unported
 
+using KerbalEconomy.Extensions;
 using UnityEngine;
 
 namespace KerbalEconomy
@@ -27,7 +28,10 @@ namespace KerbalEconomy
 
         // Runs when the object is created.
         private void Start()
-        { 
+        {
+            if (Recovery.Instance == null)
+                print("[KerbalEconomy]: Recovery system could not be started.");
+
             if (this.currentScene == GameScenes.MAINMENU && KerbalEconomy.Instance.Ledger != null)
                 KerbalEconomy.Instance.Ledger = null;
             else if (this.currentScene == GameScenes.SPACECENTER)
@@ -75,21 +79,22 @@ namespace KerbalEconomy
                             KerbalEconomy.Instance.Debit("Research & Development", this.science - KerbalEconomy.Instance.Science, false);
                             this.science = KerbalEconomy.Instance.Science;
                         }
-                        else if (this.science < KerbalEconomy.Instance.Science) // Science recovered from vessel.
+                        else if (Recovery.Instance.Recovered && this.science + Recovery.Instance.RecoveryScience < KerbalEconomy.Instance.Science) // Science recovered from vessel.
                         {
-                            KerbalEconomy.Instance.Credit("Recovered Science", KerbalEconomy.Instance.Science - this.science, false);
+                            KerbalEconomy.Instance.Credit("Recovered Science", KerbalEconomy.Instance.Science - (this.science + Recovery.Instance.RecoveryScience), false);
+                            Recovery.Instance.Recovered = false;
                             this.science = KerbalEconomy.Instance.Science;
                         }
                     }
                 }
-
-                if (this.currentScene == GameScenes.TRACKSTATION)
+                else if (this.currentScene == GameScenes.TRACKSTATION)
                 {
                     if (KerbalEconomy.Instance.ScienceIsNotNull)
                     {
-                        if (this.science < KerbalEconomy.Instance.Science) // Science recovered from vessel.
+                        if (Recovery.Instance.Recovered && this.science + Recovery.Instance.RecoveryScience < KerbalEconomy.Instance.Science) // Science recovered from vessel.
                         {
                             KerbalEconomy.Instance.Credit("Recovered Science", KerbalEconomy.Instance.Science - this.science, false);
+                            Recovery.Instance.Recovered = false;
                             this.science = KerbalEconomy.Instance.Science;
                         }
                     }

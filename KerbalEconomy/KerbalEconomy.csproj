@@ -35,6 +35,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Extensions\PartListExtensions.cs" />
+    <Compile Include="FlightDisplay.cs" />
+    <Compile Include="Recovery.cs" />
     <Compile Include="Helpers\TimeHelper.cs" />
     <Compile Include="Helpers\WindowHelper.cs" />
     <Compile Include="KerbalEconomy.cs" />
