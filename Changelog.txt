@@ -1,6 +1,13 @@
 Kerbal Economy
 ==============
 
+1.1
+ - Vessels can be recovered from flight and tracking station.
+ - In-Flight Display
+   + Transmitted Data
+   + Total at KSC
+ - Reverting to VAB/SPH is shown in the legder.
+
 1.0.1
  - Fixed run-once bug and Module Manager conflicts.
 

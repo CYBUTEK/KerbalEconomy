@@ -203,6 +203,15 @@ namespace KerbalEconomy
             set { this.Science = value / this.costRatio; }
         }
 
+        private float lastBalance = 0f;
+        /// <summary>
+        /// Gets the last balance entered into the ledger.
+        /// </summary>
+        public float LastBalance
+        {
+            get { return this.lastBalance; }
+        }
+
         #endregion
 
         #region Initialisation
@@ -243,7 +252,8 @@ namespace KerbalEconomy
                         if (row.Value)
                             this.AddScience(row.Key.Credit - row.Key.Debit);
 
-                        this.ledger.AddRow(row.Key.UniversalTime, row.Key.Transaction, row.Key.Debit, row.Key.Credit, this.Science);
+                        this.lastBalance = this.Science;
+                        this.ledger.AddRow(row.Key.UniversalTime, row.Key.Transaction, row.Key.Debit, row.Key.Credit, this.lastBalance);
                         print("[KerbalEconomy]: Added Row to Ledger.");
                     }
 
@@ -261,17 +271,9 @@ namespace KerbalEconomy
         /// </summary>
         public void Credit(string transaction, float science, bool adjust = true)
         {
-            if (!this.storageMode && this.ScienceIsNotNull)
-            {
-                if (adjust) this.AddScience(science);
-                this.ledger.AddRow(HighLogic.CurrentGame.UniversalTime, transaction, 0f, science, this.Science);
-                print("[KerbalEconomy]: Added Row to Ledger.");
-            }
-            else
-            {
-                this.rowsToProcess.Add(new Row(HighLogic.CurrentGame.UniversalTime, transaction, 0f, science, 0f), adjust);
-                print("[KerbalEconomy]: Added Row to Process Queue.");
-            }
+
+            this.rowsToProcess.Add(new Row(HighLogic.CurrentGame.UniversalTime, transaction, 0f, science, 0f), adjust);
+            print("[KerbalEconomy]: Added Row to Ledger Process Queue.");
         }
 
         /// <summary>
@@ -279,17 +281,8 @@ namespace KerbalEconomy
         /// </summary>
         public void Debit(string transaction, float science, bool adjust = true)
         {
-            if (!this.storageMode && this.ScienceIsNotNull)
-            {
-                if (adjust) this.SubScience(science);
-                this.ledger.AddRow(HighLogic.CurrentGame.UniversalTime, transaction, science, 0f, this.Science);
-                print("[KerbalEconomy]: Added Row to Ledger.");
-            }
-            else
-            {
-                this.rowsToProcess.Add(new Row(HighLogic.CurrentGame.UniversalTime, transaction, science, 0f, 0f), adjust);
-                print("[KerbalEconomy]: Added Row to Ledger Process Queue.");
-            }
+            this.rowsToProcess.Add(new Row(HighLogic.CurrentGame.UniversalTime, transaction, science, 0f, 0f), adjust);
+            print("[KerbalEconomy]: Added Row to Ledger Process Queue.");
         }
 
         /// <summary>

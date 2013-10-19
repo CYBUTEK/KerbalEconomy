@@ -148,10 +148,12 @@ namespace KerbalEconomy
                         {
                             Recovery.Instance.FlightStarted = false;
 
-                            if (this.science < KerbalEconomy.Instance.Science)
+                            if (Recovery.Instance.FlightStartScience < KerbalEconomy.Instance.Science)
+                            {
                                 KerbalEconomy.Instance.Credit("Transmitted Science", KerbalEconomy.Instance.Science - Recovery.Instance.FlightStartScience, false);
+                            }
                         }
-
+                        
                         if (HighLogic.LoadedScene == GameScenes.EDITOR)
                         {
                             KerbalEconomy.Instance.StorageMode = true;
