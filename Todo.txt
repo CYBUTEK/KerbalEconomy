@@ -1,13 +1,13 @@
 ﻿* In-Flight Display
-	-	Show total science earned whilst in flight.
-	-	Show equivilant cash value.
+DONE	-	Show total science earned whilst in flight.
+DONE	-	Show equivilant cash value for science.
+DONE	-	Show science and cash value of total at KSC.
 
-* Recover & Recycling
-	-	If not yet launched you will get 100% value back.
-	-	Recoverable value is a percentage based on difficulty.
-		+	Easy:	90%
-		+	Normal:	75%
-		+	Hard:	50%
+* Recovery
+DONE	-	Recovery gives 100% of cost for remaining parts.
+DONE	-	Reverting to VAB resets science.
+DONE	-	Reverting to Launch resets science.
+	-	Reverting to Space Centre resets science.
 
 DONE * Save and load ledgers from a 'Ledgers' directory.
 DONE	-	Create directory if needed.

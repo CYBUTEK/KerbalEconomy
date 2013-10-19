@@ -40,6 +40,26 @@ namespace KerbalEconomy
 
         #region Properties
 
+        private bool flightStarted = false;
+        /// <summary>
+        /// Gets and sets whether a flight has been started.
+        /// </summary>
+        public bool FlightStarted
+        {
+            get { return this.flightStarted; }
+            set { this.flightStarted = value; }
+        }
+
+        private float flightStartScience = 0f;
+        /// <summary>
+        /// Gets and sets the transmitted science for use across scene loading. (e.g. Quickloading)
+        /// </summary>
+        public float FlightStartScience
+        {
+            get { return this.flightStartScience; }
+            set { this.flightStartScience = value; }
+        }
+
         private bool reverted = false;
         /// <summary>
         /// Gets and sets whether the ship has been reverted.
@@ -97,7 +117,7 @@ namespace KerbalEconomy
             this.recovered = true;
             this.recoveryMoney = vessel.protoPartSnapshots.Cost();
 
-            KerbalEconomy.Instance.Credit(vessel.vesselType + " Recovery", KerbalEconomy.ToScience(this.recoveryMoney));
+            KerbalEconomy.Instance.Credit("Recovered " + vessel.vesselType, KerbalEconomy.ToScience(this.recoveryMoney));
         }
 
         #endregion

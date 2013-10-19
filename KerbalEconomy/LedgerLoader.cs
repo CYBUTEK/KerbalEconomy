@@ -144,8 +144,13 @@ namespace KerbalEconomy
                 {
                     if (KerbalEconomy.Instance.ScienceIsNotNull)
                     {
-                        if (this.science < KerbalEconomy.Instance.Science)
-                            KerbalEconomy.Instance.Credit("Mission Science", KerbalEconomy.Instance.Science - this.science, false);
+                        if (HighLogic.LoadedScene != GameScenes.FLIGHT)
+                        {
+                            Recovery.Instance.FlightStarted = false;
+
+                            if (this.science < KerbalEconomy.Instance.Science)
+                                KerbalEconomy.Instance.Credit("Transmitted Science", KerbalEconomy.Instance.Science - Recovery.Instance.FlightStartScience, false);
+                        }
 
                         if (HighLogic.LoadedScene == GameScenes.EDITOR)
                         {

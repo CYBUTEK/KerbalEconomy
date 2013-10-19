@@ -30,11 +30,8 @@ namespace KerbalEconomy
         private bool isOpen = false;
 
         private bool hasInitStyles = false;
-        private bool hasInitScience = false;
-        private float startScience = 0f;
         private float currentScience = 0f;
         private float transmittedScience = 0f;
-        private float storedScience = 0f;
 
         #endregion
 
@@ -100,14 +97,14 @@ namespace KerbalEconomy
             // Update science variables.
             if (KerbalEconomy.Instance.ScienceIsNotNull)
             {
-                if (!this.hasInitScience) // Set starting science on first update.
+                if (!Recovery.Instance.FlightStarted) // Set starting science on first update.
                 {
-                    this.hasInitScience = true;
-                    this.startScience = KerbalEconomy.Instance.Science;
+                    Recovery.Instance.FlightStarted = true;
+                    Recovery.Instance.FlightStartScience = KerbalEconomy.Instance.Science;
                 }
 
                 this.currentScience = KerbalEconomy.Instance.Science;
-                this.transmittedScience = this.currentScience - this.startScience;
+                this.transmittedScience = this.currentScience - Recovery.Instance.FlightStartScience;
             }
 
             // Update window scroll state.
@@ -146,6 +143,7 @@ namespace KerbalEconomy
         {
             this.DrawTransmittedScience();
             //this.DrawStoredScience();
+            this.DrawTotalScience();
         }
 
         // Draws the transmitted science section.
@@ -176,6 +174,22 @@ namespace KerbalEconomy
             GUILayout.BeginHorizontal();
             GUILayout.Label("Money", this.labelLeftStyle);
             GUILayout.Label(KerbalEconomy.ToMonies(this.transmittedScience).ToString("#,0."), this.labelRightStyle);
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+        }
+
+        // Draws the current science section.
+        private void DrawTotalScience()
+        {
+            GUILayout.Label("Total at KSC", this.labelTitleStyle);
+            GUILayout.BeginVertical(this.boxStyle);
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Science", this.labelLeftStyle);
+            GUILayout.Label(this.currentScience.ToString("#,0.00"), this.labelRightStyle);
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Money", this.labelLeftStyle);
+            GUILayout.Label(KerbalEconomy.ToMonies(this.currentScience).ToString("#,0."), this.labelRightStyle);
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
         }
