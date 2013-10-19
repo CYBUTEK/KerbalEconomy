@@ -19,7 +19,7 @@ namespace KerbalEconomy
         /// <summary>
         /// Current version of the Kerbal Economy assembly.
         /// </summary>
-        public const string AssemblyVersion = "1.1.0";
+        public const string AssemblyVersion = "1.1";
 
         public const float EASY = 2000f;
         public const float NORMAL = 1000f;
