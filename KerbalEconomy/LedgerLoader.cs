@@ -108,6 +108,13 @@ namespace KerbalEconomy
                         }
 
                     }
+                    else if (this.currentScene == GameScenes.EDITOR)
+                    {
+                        if (Recovery.Instance.Reverted)
+                        {
+                            Recovery.Instance.Reverted = false;
+                        }
+                    }
                 }
             }
         }
@@ -135,8 +142,17 @@ namespace KerbalEconomy
                 // Science gained through missions.
                 if (this.currentScene == GameScenes.FLIGHT)
                 {
-                    if (KerbalEconomy.Instance.ScienceIsNotNull && this.science < KerbalEconomy.Instance.Science)
-                        KerbalEconomy.Instance.Credit("Mission Science", KerbalEconomy.Instance.Science - this.science, false);
+                    if (KerbalEconomy.Instance.ScienceIsNotNull)
+                    {
+                        if (this.science < KerbalEconomy.Instance.Science)
+                            KerbalEconomy.Instance.Credit("Mission Science", KerbalEconomy.Instance.Science - this.science, false);
+
+                        if (HighLogic.LoadedScene == GameScenes.EDITOR)
+                        {
+                            KerbalEconomy.Instance.StorageMode = true;
+                            KerbalEconomy.Instance.Credit("==== Reverted Mission ====", 0f, false);
+                        }
+                    }          
                 }
 
                 if (KerbalEconomy.Instance.Ledger != null)

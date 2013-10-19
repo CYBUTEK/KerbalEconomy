@@ -40,6 +40,26 @@ namespace KerbalEconomy
 
         #region Properties
 
+        private bool reverted = false;
+        /// <summary>
+        /// Gets and sets whether the ship has been reverted.
+        /// </summary>
+        public bool Reverted
+        {
+            get { return this.reverted; }
+            set { this.reverted = value; }
+        }
+
+        private float revertedScience = 0f;
+        /// <summary>
+        /// Gets and sets the starting science before revertion.
+        /// </summary>
+        public float RevertedScience
+        {
+            get { return this.revertedScience; }
+            set { this.revertedScience = value; }
+        }
+
         private bool recovered = false;
         /// <summary>
         /// Gets and sets whether the ship has been recovered.
