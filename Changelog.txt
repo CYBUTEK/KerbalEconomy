@@ -1,6 +1,9 @@
 Kerbal Economy
 ==============
 
+1.1.1
+ - Fixed button positioning in editor at low resolutions.
+
 1.1
  - Vessels can be recovered from flight and tracking station.
  - In-Flight Display

@@ -13,9 +13,10 @@ namespace KerbalEconomy
     {
         #region Fields
 
-        private Rect buttonPosition = new Rect(Screen.width / 2f + 280f, 1f, 125f, 24f);
-        private Rect ledgerButtonPosition = new Rect(Screen.width / 2f + 280f, 29f, 125f, 24f);
-        private Rect windowPosition = new Rect(Screen.width / 2f + 280f, 55f, 200f, 0f);
+
+        private Rect buttonPosition;
+        private Rect ledgerButtonPosition;
+        private Rect windowPosition;
         private int windowID = WindowHelper.GetWindowID();
 
         private GUIStyle windowStyle, boxStyle, buttonStyle, labelLeftStyle, labelRightStyle;
@@ -34,6 +35,20 @@ namespace KerbalEconomy
         {
             if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
             {
+                // Fixes problems with the button displaying over the top the new/save/load at resolutions with less than 1280 width.
+                if (Screen.width >= 1280)
+                {
+                    this.buttonPosition = new Rect(Screen.width / 2f + 280f, 1f, 125f, 24f);
+                    this.ledgerButtonPosition = new Rect(Screen.width / 2f + 280f, 29f, 125f, 24f);
+                    this.windowPosition = new Rect(Screen.width / 2f + 280f, 55f, 200f, 0f);
+                }
+                else
+                {
+                    this.buttonPosition = new Rect(Screen.width / 2f + 280f, 45f, 125f, 24f);
+                    this.ledgerButtonPosition = new Rect(Screen.width / 2f + 280f, 71f, 125f, 24f);
+                    this.windowPosition = new Rect(Screen.width / 2f + 280f, 97f, 200f, 0f);
+                }
+
                 RenderingManager.AddToPostDrawQueue(0, this.Draw);
             }
         }

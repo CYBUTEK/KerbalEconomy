@@ -1,39 +1,38 @@
-﻿DONE * In-Flight Display
+﻿ * In-Flight Display
 DONE	-	Show total science earned whilst in flight.
 DONE	-	Show equivilant cash value for science.
 DONE	-	Show science and cash value of total at KSC.
 
-* Recovery
+ * Recovery
 DONE	-	Recovery gives 100% of cost for remaining parts.
 DONE	-	Reverting to VAB resets science.
 DONE	-	Reverting to Launch resets science.
 
-DONE * Save and load ledgers from a 'Ledgers' directory.
+ * Save and load ledgers from a 'Ledgers' directory.
 DONE	-	Create directory if needed.
 DONE	-	Change file extension from '.txt' to '.csv'.
 
-DONE * Create basic settings manager.
+ * Create basic settings manager.
 DONE	-	'Key = Value'
 DONE	-	Saving
 DONE	-	Loading
 
-DONE * Save and load difficulty setting.
+ * Save and load difficulty setting.
 DONE	-	Saving
 DONE	-	Loading
 
-DONE * Add science gained in a mission to the ledger.
+ * Add science gained in a mission to the ledger.
 DONE	-	Difference between start and end of the Flight scene.
 DONE	-	Add transaction to the ledger crediting science.
 
-DONE * Add science used in R&D to the ledger.
+ * Add science used in R&D to the ledger.
 DONE	-	Difference between start and end of the R&D scene.
 DONE	-	Add transaction to the ledger debiting science.
-
-DONE * Readme file.
 
 * Additional functionality.
 DONE	-	Ledger size is adjustable in settings.
 DONE	-	Science (pre-0.22) adjustable in settings.
+DONE	-	Fix display button in editor at lower resoltions.
 
 * KerbalEconomyAPI
 	-	Allow usage without errors even if Kerbal Economy is not installed.

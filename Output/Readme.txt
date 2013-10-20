@@ -1,5 +1,5 @@
-Kerbal Economy v1.0
-===================
+Kerbal Economy
+==============
 
 ABOUT
 -----
@@ -37,6 +37,9 @@ The ledger will record transactions such as:
 Ledgers are available within the 'GameData/KerbalEconomy/Ledgers' folder, and are
 stored in a tab separated '.csv' files.  The files are named after the associated
 save which is used within Kerbal Space Program.
+
+Note that the remaining parts of vessels are recovered along with any stored science,
+making it worth while to create re-usable crafts and getting them back to Kerbin intact.
 
 
 ADVANCED
